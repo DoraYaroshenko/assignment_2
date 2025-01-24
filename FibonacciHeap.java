@@ -6,7 +6,9 @@
  */
 public class FibonacciHeap {
 	public HeapNode min;
-	public HeapNode first;
+	public int totalCuts;
+	public int totalLinks;
+	public int numTrees;
 
 	/**
 	 *
@@ -14,8 +16,7 @@ public class FibonacciHeap {
 	 *
 	 */
 	public FibonacciHeap() {
-		this.min=null;
-		this.first=null;
+		this.min = null;
 	}
 
 	/**
@@ -28,66 +29,32 @@ public class FibonacciHeap {
 	public HeapNode insert(int key, String info) {
 		HeapNode newNode = new HeapNode(key, info);
 		newNode.rank = 0;
-		int caseNum = determineInsertionCase();
-		switch (caseNum) {
-		case 0:
-			handleInsertionToEmptyTree(newNode);
-			break;
-		case 1:
-			handleInsertionWhenMinHasNextAndPrev(newNode);
-			break;
-		case 2:
-			handleInsertionWhenMinHasNoPrevAndNoNext(newNode);
-			break;
-		case 3:
-			handleInsertionWhenMinHasPrevAndNoNext(newNode);
-			break;
-		}
-		if (this.min.key > newNode.key)
-			this.min = newNode;
+		addTree(newNode);
 		return newNode;
 	}
 
 	private void handleInsertionToEmptyTree(HeapNode newNode) {
 		this.min = newNode;
-		this.first = newNode;
 		newNode.next = newNode;
 		newNode.prev = newNode;
 	}
 
-	private void handleInsertionWhenMinHasNextAndPrev(HeapNode newNode) {
+	private void handleInsertionWhenTreeNotEmpty(HeapNode newNode) {
 		newNode.prev = this.min;
 		newNode.next = this.min.next;
 		this.min.next.prev = newNode;
 		this.min.next = newNode;
 	}
 
-	private void handleInsertionWhenMinHasNoPrevAndNoNext(HeapNode newNode) {
-		this.min.next = newNode;
-		this.min.prev = newNode;
-		newNode.prev = this.min;
-		newNode.next = this.min;
-	}
-	
-	private void handleInsertionWhenMinHasPrevAndNoNext(HeapNode newNode) {
-		this.min.next=newNode;
-		newNode.prev=this.min;
-		newNode.next = this.first;
-		this.first.prev = newNode;
-	}
-
-	private int determineInsertionCase() {
-		if (this.min == null)
-			return 0;
-		boolean hasPrev = this.min != this.first;
-		boolean hasNext = this.min.next != this.first;
-		if (hasNext)
-			return 1;
-		if (!hasNext && !hasPrev)
-			return 2;
-		if (!hasNext && hasPrev)
-			return 3;
-		return -1;
+	private void addTree(HeapNode x) {
+		if (this.min == null) {
+			handleInsertionToEmptyTree(x);
+		} else {
+			handleInsertionWhenTreeNotEmpty(x);
+		}
+		if (this.min.key > x.key)
+			this.min = x;
+		this.numTrees += 1;
 	}
 
 	/**
@@ -117,7 +84,41 @@ public class FibonacciHeap {
 	 * 
 	 */
 	public void decreaseKey(HeapNode x, int diff) {
-		return; // should be replaced by student code
+		x.key = x.key - diff;
+		if (x.parent != null && x.key < x.parent.key) {
+			cascadingCuts(x);
+		}
+		if (x.key < this.min.key) {
+			this.min = x;
+		}
+	}
+
+	private void cascadingCuts(HeapNode x) {
+		HeapNode parent = x.parent;
+		cut(x);
+		if (parent.parent != null) {
+			if (!parent.mark) {
+				parent.mark = true;
+			} else {
+				cascadingCuts(parent);
+			}
+		}
+	}
+
+	private void cut(HeapNode x) {
+		HeapNode parent = x.parent;
+		x.parent = null;
+		x.mark = false;
+		parent.rank = parent.rank - 1;
+		if (x == x.next) {
+			parent.child = null;
+		} else {
+			parent.child = x.next;
+			x.prev.next = x.next;
+			x.next.prev = x.prev;
+		}
+		totalCuts+=1;
+		addTree(x);
 	}
 
 	/**
@@ -135,7 +136,7 @@ public class FibonacciHeap {
 	 * 
 	 */
 	public int totalLinks() {
-		return 0; // should be replaced by student code
+		return this.totalLinks;
 	}
 
 	/**
@@ -144,7 +145,7 @@ public class FibonacciHeap {
 	 * 
 	 */
 	public int totalCuts() {
-		return 0; // should be replaced by student code
+		return this.totalCuts;
 	}
 
 	/**
@@ -153,7 +154,11 @@ public class FibonacciHeap {
 	 *
 	 */
 	public void meld(FibonacciHeap heap2) {
-		return; // should be replaced by student code
+		this.min.next.prev = heap2.min.prev;
+		heap2.min.prev.next = this.min.next;
+		this.min.next = heap2.min;
+		heap2.min.prev = this.min;
+		
 	}
 
 	/**
@@ -171,7 +176,31 @@ public class FibonacciHeap {
 	 * 
 	 */
 	public int numTrees() {
-		return 0; // should be replaced by student code
+		return this.numTrees;
+	}
+
+	public void printHeap() {
+		HeapNode node = this.min;
+		while (node.next != this.min) {
+			System.out.println("Prev: " + node.prev.key + " Node: " + node.key + " Next: " + node.next.key);
+			printTree(node);
+			node = node.next;
+		}
+		System.out.println("Prev: " + node.prev.key + " Node: " + node.key + " Next: " + node.next.key);
+		System.out.println("Number of trees: " + this.numTrees);
+	}
+
+	public void printTree(HeapNode x) {
+		HeapNode child = x.child;
+		while (child != null) {
+			HeapNode node = child;
+			while (node.next != child) {
+				System.out.print(node.key + " ");
+				node = node.next;
+			}
+			System.out.print(node.key + " ");
+			child = node.next.child;
+		}
 	}
 
 	/**
