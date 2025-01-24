@@ -188,10 +188,11 @@ public class FibonacciHeap
 	 */
 	
 	private HeapNode heapOfChildrenHelper(HeapNode node) {
+		HeapNode minOfChildren=null;
 		if(node.child!=null) {
 			HeapNode pointerToGivenNode=node;
 			HeapNode currNode=pointerToGivenNode.child, tempPointerToChild=currNode;
-			HeapNode minOfChildren=currNode;
+			minOfChildren=currNode;
 			currNode.parent=null;
 			while(currNode.next!=tempPointerToChild) 
 			{
@@ -201,12 +202,8 @@ public class FibonacciHeap
 				}
 				currNode.parent=null;
 			}
-			return minOfChildren;
 		}
-		else {//if node does not have children
-			return null;
-		}
-		
+		return minOfChildren;
 	}
 	/**
 	 * 
