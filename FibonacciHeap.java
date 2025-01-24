@@ -158,6 +158,12 @@ public class FibonacciHeap {
 		heap2.min.prev.next = this.min.next;
 		this.min.next = heap2.min;
 		heap2.min.prev = this.min;
+		if(heap2.min.key<this.min.key) {
+			this.min = heap2.min;
+		}
+		this.numTrees+=heap2.numTrees;
+		this.totalCuts+=heap2.totalCuts;
+		this.totalLinks+=heap2.totalLinks;
 		
 	}
 

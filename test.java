@@ -24,22 +24,21 @@ public class test {
 	public static boolean testInsert() {
 		FibonacciHeap h = createHeap();
 		h.insert(101, String.valueOf(101));
-		h.printHeap();
 		return h.min.next.key==101&&h.min.next.info.equals("101");
 	}
 	
-	public static void testMeld() {
+	public static boolean testMeld() {
 		FibonacciHeap f = createHeap();
+		int numOfTreesBeforeMeld = f.numTrees;
 		FibonacciHeap h = createHeap();
-		f.printHeap();
-		h.printHeap();
 		f.meld(h);
 		f.printHeap();
+		return f.numTrees==numOfTreesBeforeMeld+h.numTrees;
 	}
 
 	public static void main(String[] args) {
 		System.out.println(testInsert());
-		testMeld();
+		System.out.println(testMeld());
 
 	}
 
