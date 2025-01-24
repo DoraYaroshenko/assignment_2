@@ -205,7 +205,7 @@ public class FibonacciHeap
 		}
 		return minOfChildren;
 	}
-	/**
+	/**bla
 	 * 
 	 * counts the number of children a node has, amortized time is O(log(n))
 	 *
