@@ -12,6 +12,7 @@ public class FibonacciHeap
 	public int totalCuts;
 	public int totalLinks;
 	public int numTrees;
+	public int numOfNodes;
 	
 	/**
 	 *
@@ -38,38 +39,38 @@ public class FibonacciHeap
 	/**
 	 * 
 	 * Return the minimal HeapNode, null if empty.
+	 * O(1) time complexity as the function simply returns a property of the Heap.
 	 *
 	 */
 	public HeapNode findMin()
 	{
-		return this.min; // should be replaced by student code
+		return this.min; 
 	}
 
 	/**
 	 * 
 	 * Delete the minimal item
+	 * 
+	 * overall time complexity is the sum of the time complexity of the actual deletion and the consolidation.
+	 * the actual deletion does constant work on the children of min (O(logn) children) and then calls meld.
+	 * therefore in both worst case and amortized case it has O(log(n)) time complexity
+	 * it was shown during the lecture that the consolidation has O(n) worst case time complexity and O(log(n))
+	 * amortized time complexity.
+	 * 
+	 * time complexity of deleteMin() is:
+	 * O(n) worst case
+	 * O(log(n)) amortized
 	 *
 	 */
 	
-	/**
-	 * 
-	 * 
-	 * 
-	 * delete the min, 
-	 * meld the sub trees of the previous min with the heap
-	 * consolidate until all roots have different ranks
-	 * find new min
-	 * 
-	 * 
-	 * 
-	 */
+	
 	public void deleteMin()
 	{
 		if(this.min==null) {
 			//heap is empty
 		}
 		else {
-			int countChildren=countChildren(this.min);
+			int countChildren=this.min.rank;
 			if(this.min.child!=null) {
 				HeapNode minOfChildren=heapOfChildrenHelper(this.min);
 				FibonacciHeap toMeld=new FibonacciHeap();
@@ -80,6 +81,7 @@ public class FibonacciHeap
 			else {
 				removeMin();
 			}
+			this.numOfNodes--;
 			this.numTrees=this.numTrees+countChildren-1;
 			consolidate();
 			
@@ -97,7 +99,8 @@ public class FibonacciHeap
 		int maxRank=log2(this.size())+1;
 		HeapNode[] arrRanks=new HeapNode[maxRank];
 		HeapNode currRoot=this.min, tempPointer=currRoot;
-		while(currRoot.next.next!=tempPointer) {
+		while(1==1) 
+		{
 			while(arrRanks[currRoot.rank]!=null) {
 				arrRanks[currRoot.rank]=null;
 				link(currRoot, arrRanks[currRoot.rank]);
@@ -106,10 +109,24 @@ public class FibonacciHeap
 				}
 				arrRanks[currRoot.rank]=currRoot;
 			}
-			currRoot=currRoot.next;
+			if(currRoot.next!=tempPointer) {
+				currRoot=currRoot.next;
+			}
+			else {
+				break;
+			}
+			
 		}
 		
 	}
+	
+	/**
+	 * links two binomial trees of the same rank.
+	 * 
+	 * 
+	 * @param node1: binomial tree of some rank k
+	 * @param node2: binomial tree of some rank k
+	 */
 	
 	private void link(HeapNode node1, HeapNode node2) {
 		if(node1.key>node2.key) {
@@ -123,6 +140,7 @@ public class FibonacciHeap
 		replaceChild(node1, node2);
 		node1.rank++;
 		this.numTrees--;
+		this.totalLinks++;
 	}
 	
 	/**
@@ -153,10 +171,26 @@ public class FibonacciHeap
 		
 	}
 	
+	/**
+	 * checks if node should become the new min
+	 * 
+	 * @param node: the node that is being checked
+	 * @return: true if node's key is smaller than min's key, false otherwise
+	 * 
+	 * time complexity O(1) in both worst case and amortized time.
+	 */
 	private boolean isNewMin(HeapNode node) {
 		return (node.key<this.min.key);
 	}
 	
+	/**
+	 * returns the logarithm of integer x in base 2
+	 * 
+	 * @param x
+	 * @return: logarithm of integer x in base 2 rounded down
+	 * 
+	 * time complexity O(1) in both worst case and amortized time.
+	 */
 	private int log2(int x) {
 		int result = (int)(Math.log(x) / Math.log(2));
 		return result;
@@ -164,7 +198,7 @@ public class FibonacciHeap
 	
 	/**
 	 * 
-	 * deletes min from root list
+	 * deletes min from roots list
 	 * time complexity O(1)
 	 *
 	 */
@@ -182,8 +216,9 @@ public class FibonacciHeap
 	/**
 	 * 
 	 * finds the minimum out of the children of node, makes all the children roots.
-	 * time complexity O(1*[num of children node has]), based on potential function [[num of trees]+2*[marked nodes]]
-	 * amortized time complexity is O(logn)
+	 * 
+	 * time complexity O(1*[num of children node has]), node has O(log(n)) children, therefore
+	 * time complexity is O(log(n)) in both worst case and amortized time.
 	 *
 	 */
 	
@@ -205,24 +240,7 @@ public class FibonacciHeap
 		}
 		return minOfChildren;
 	}
-	/**bla
-	 * 
-	 * counts the number of children a node has, amortized time is O(log(n))
-	 *
-	 */
-	private int countChildren(HeapNode node) {
-		int counter=0;
-		if(node.child!=null) {
-			HeapNode pointerToGivenNode=node;
-			HeapNode currNode=pointerToGivenNode.child, tempPointerToChild=currNode;
-			while(currNode.next!=tempPointerToChild) 
-			{
-				currNode=currNode.next;
-				counter++;
-			}
-		}
-		return counter;
-	}
+	
 
 	/**
 	 * 
@@ -239,11 +257,15 @@ public class FibonacciHeap
 	/**
 	 * 
 	 * Delete the x from the heap.
+	 * time complexity is the sum of the time complexity of decreaseKey and deleteMin. therefore:
+	 * worst case: O(n)
+	 * amortized: O(logn)
 	 *
 	 */
 	public void delete(HeapNode x) 
 	{    
-		return; // should be replaced by student code
+		decreaseKey(x, Integer.MIN_VALUE);
+		deleteMin();
 	}
 
 
@@ -251,10 +273,12 @@ public class FibonacciHeap
 	 * 
 	 * Return the total number of links.
 	 * 
+	 * time complexity O(1) in both worst case and amortized time.
+	 * 
 	 */
 	public int totalLinks()
 	{
-		return 0; // should be replaced by student code
+		return totalLinks; // should be replaced by student code
 	}
 
 
@@ -262,10 +286,12 @@ public class FibonacciHeap
 	 * 
 	 * Return the total number of cuts.
 	 * 
+	 * time complexity O(1) in both worst case and amortized time.
+	 * 
 	 */
 	public int totalCuts()
 	{
-		return 0; // should be replaced by student code
+		return totalCuts; // should be replaced by student code
 	}
 
 
@@ -296,16 +322,20 @@ public class FibonacciHeap
 		this.totalCuts+=heap2.totalCuts;
 		this.totalLinks+=heap2.totalLinks;
 		this.numTrees+=heap2.numTrees;
+		this.numOfNodes+=heap2.numOfNodes;
 	}
 
 	/**
 	 * 
 	 * Return the number of elements in the heap
+	 * 
+	 * time complexity O(1) in both worst case and amortized time.
 	 *   
 	 */
 	public int size()
 	{
-		return 42; // should be replaced by student code
+		return numOfNodes;
+		
 	}
 
 
@@ -316,7 +346,7 @@ public class FibonacciHeap
 	 */
 	public int numTrees()
 	{
-		return 0; // should be replaced by student code
+		return numTrees; // should be replaced by student code
 	}
 
 	/**
