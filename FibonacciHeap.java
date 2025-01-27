@@ -2,6 +2,13 @@ import java.util.ArrayList;
 import java.math.*;
 
 /**
+ * id1:330371063
+ * name1:דורה ירושנקו
+ * username1:yaroshenko
+ * id2:215060922
+ * name2: אנה ברסקי
+ * username2:annabarski
+ * 
  * FibonacciHeap
  *
  * An implementation of Fibonacci heap over positive integers.
@@ -39,6 +46,7 @@ public class FibonacciHeap {
 		numOfNodes++;
 		return newNode;
 	}
+
 	/**
 	 * 
 	 *
@@ -52,11 +60,11 @@ public class FibonacciHeap {
 		newNode.next = newNode;
 		newNode.prev = newNode;
 	}
+
 	/**
 	 * 
 	 *
-	 * Insert (key,info) into the heap and fix the pointers.
-	 * Complexity O(1)
+	 * Insert (key,info) into the heap and fix the pointers. Complexity O(1)
 	 *
 	 */
 
@@ -66,11 +74,12 @@ public class FibonacciHeap {
 		this.min.next.prev = newNode;
 		this.min.next = newNode;
 	}
+
 	/**
 	 * 
 	 *
-	 * Adds a tree with root HeapNode node to the list of trees
-	 * Complexity O(1), because we only fix pointers and update minimum
+	 * Adds a tree with root HeapNode node to the list of trees Complexity O(1),
+	 * because we only fix pointers and update minimum
 	 *
 	 */
 
@@ -340,8 +349,9 @@ public class FibonacciHeap {
 	 * 
 	 * pre: 0<diff<x.key
 	 * 
-	 * Decrease the key of x by diff and fix the heap.
-	 * O(1) amortized, beacause d operations trigger at most 2d cuts, and the potential function is #trees+2#markedNodes. Implemented exactly as in class
+	 * Decrease the key of x by diff and fix the heap. O(1) amortized, beacause d
+	 * operations trigger at most 2d cuts, and the potential function is
+	 * #trees+2#markedNodes. Implemented exactly as in class
 	 */
 	public void decreaseKey(HeapNode x, int diff) {
 		if (x != null) {
@@ -354,12 +364,11 @@ public class FibonacciHeap {
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 *
-	 * Handling a case when decreaseKey triggers a series of cuts
-	 * O(1) amortized
+	 * Handling a case when decreaseKey triggers a series of cuts O(1) amortized
 	 *
 	 */
 
@@ -375,11 +384,11 @@ public class FibonacciHeap {
 			}
 		}
 	}
+
 	/**
 	 * 
 	 *
-	 * Cuts the child from its parent
-	 * Complexity O(1), because it's constant
+	 * Cuts the child from its parent Complexity O(1), because it's constant
 	 *
 	 */
 
