@@ -24,23 +24,12 @@ public class FibonacciHeap {
 		this.min = null;
 	}
 
-	public boolean isEmpty() {
-		return this.min == null;
-	}
-
-	public HeapNode getFirst() {
-		return this.min;
-	}
-
-	public int potential() {
-		return numTrees + 2*numOfMarkedNodes;
-	}
-
 	/**
 	 * 
 	 * pre: key > 0
 	 *
 	 * Insert (key,info) into the heap and return the newly generated HeapNode.
+	 * Complexity O(1), because we always insert a new node after minimum
 	 *
 	 */
 	public HeapNode insert(int key, String info) {
@@ -50,25 +39,46 @@ public class FibonacciHeap {
 		numOfNodes++;
 		return newNode;
 	}
+	/**
+	 * 
+	 *
+	 * Insert (key,info) into an empty heap and return the newly generated HeapNode.
+	 * Complexity O(1), because we just update the minimal value
+	 *
+	 */
 
-	private void handleInsertionToEmptyTree(HeapNode newNode) {
+	private void handleInsertionToEmptyHeap(HeapNode newNode) {
 		this.min = newNode;
 		newNode.next = newNode;
 		newNode.prev = newNode;
 	}
+	/**
+	 * 
+	 *
+	 * Insert (key,info) into the heap and fix the pointers.
+	 * Complexity O(1)
+	 *
+	 */
 
-	private void handleInsertionWhenTreeNotEmpty(HeapNode newNode) {
+	private void handleInsertionWhenHeapNotEmpty(HeapNode newNode) {
 		newNode.prev = this.min;
 		newNode.next = this.min.next;
 		this.min.next.prev = newNode;
 		this.min.next = newNode;
 	}
+	/**
+	 * 
+	 *
+	 * Adds a tree with root HeapNode node to the list of trees
+	 * Complexity O(1), because we only fix pointers and update minimum
+	 *
+	 */
 
 	private void addTree(HeapNode x) {
 		if (this.min == null) {
-			handleInsertionToEmptyTree(x);
+			handleInsertionToEmptyHeap(x);
 		} else {
-			handleInsertionWhenTreeNotEmpty(x);
+			handleInsertionWhenHeapNotEmpty(x);
 		}
 		if (this.min.key > x.key)
 			this.min = x;
@@ -331,7 +341,7 @@ public class FibonacciHeap {
 	 * pre: 0<diff<x.key
 	 * 
 	 * Decrease the key of x by diff and fix the heap.
-	 * 
+	 * O(1) amortized, beacause d operations trigger at most 2d cuts, and the potential function is #trees+2#markedNodes. Implemented exactly as in class
 	 */
 	public void decreaseKey(HeapNode x, int diff) {
 		if (x != null) {
@@ -344,6 +354,14 @@ public class FibonacciHeap {
 			}
 		}
 	}
+	
+	/**
+	 * 
+	 *
+	 * Handling a case when decreaseKey triggers a series of cuts
+	 * O(1) amortized
+	 *
+	 */
 
 	private void cascadingCuts(HeapNode x) {
 		HeapNode parent = x.parent;
@@ -357,6 +375,13 @@ public class FibonacciHeap {
 			}
 		}
 	}
+	/**
+	 * 
+	 *
+	 * Cuts the child from its parent
+	 * Complexity O(1), because it's constant
+	 *
+	 */
 
 	private void cut(HeapNode x) {
 		HeapNode parent = x.parent;

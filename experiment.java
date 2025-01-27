@@ -9,27 +9,27 @@ public class experiment {
 		int cutsNum = 0;
 		int treesNum = 0;
 		long timeSum = 0;
-		FibonacciHeap fh = new FibonacciHeap();
 		ArrayList<Integer> indexes = new ArrayList<>();
 		for (int j = 1; j < n + 1; j++) {
 			indexes.add(j);
 		}
 		for (int i = 0; i < 20; i++) {
+			FibonacciHeap fh = new FibonacciHeap();
 			Collections.shuffle(indexes);
 			long startTime = System.currentTimeMillis();
 			for (int j = 0; j < n; j++) {
 				fh.insert(indexes.get(j), String.valueOf(indexes.get(j)));
 			}
 			fh.deleteMin();
+			long endTime = System.currentTimeMillis();
 			sizeOfHeap += fh.size();
 			linksNum += fh.totalLinks();
 			cutsNum += fh.totalCuts();
 			treesNum += fh.numTrees();
-			long endTime = System.currentTimeMillis();
 			timeSum += endTime - startTime;
 		}
 		System.out.println("First experiment with n=" + n);
-		System.out.println("Average size: " + sizeOfHeap / 20);
+		System.out.println("Average size: " + (sizeOfHeap / 20));
 		System.out.println("Average links: " + linksNum / 20);
 		System.out.println("Average cuts: " + cutsNum / 20);
 		System.out.println("Average trees: " + treesNum / 20);
@@ -42,12 +42,12 @@ public class experiment {
 		int cutsNum = 0;
 		int treesNum = 0;
 		long timeSum = 0;
-		FibonacciHeap fh = new FibonacciHeap();
 		ArrayList<Integer> indexes = new ArrayList<>();
 		for (int j = 1; j < n + 1; j++) {
 			indexes.add(j);
 		}
 		for (int i = 0; i < 20; i++) {
+			FibonacciHeap fh = new FibonacciHeap();
 			Collections.shuffle(indexes);
 			long startTime = System.currentTimeMillis();
 			for (int j = 0; j < n; j++) {
@@ -56,11 +56,11 @@ public class experiment {
 			for (int j = 0; j < n / 2; j++) {
 				fh.deleteMin();
 			}
+			long endTime = System.currentTimeMillis();
 			sizeOfHeap += fh.size();
 			linksNum += fh.totalLinks();
 			cutsNum += fh.totalCuts();
 			treesNum += fh.numTrees();
-			long endTime = System.currentTimeMillis();
 			timeSum += endTime - startTime;
 		}
 		System.out.println("Second experiment with n=" + n);
@@ -77,12 +77,12 @@ public class experiment {
 		int cutsNum = 0;
 		int treesNum = 0;
 		long timeSum = 0;
-		FibonacciHeap fh = new FibonacciHeap();
 		ArrayList<Integer> indexes = new ArrayList<>();
 		for (int j = 1; j < n + 1; j++) {
 			indexes.add(j);
 		}
 		for (int i = 0; i < 20; i++) {
+			FibonacciHeap fh = new FibonacciHeap();
 			Collections.shuffle(indexes);
 			long startTime = System.currentTimeMillis();
 			FibonacciHeap.HeapNode[] nodes = new FibonacciHeap.HeapNode[(int) n + 1];
@@ -92,15 +92,15 @@ public class experiment {
 			}
 			fh.deleteMin();
 			int m = 1;
-			while (fh.size() > (Math.pow(2, 5) - 1)&&(nodes.length - m)>2) {
+			while (fh.size() > (Math.pow(2, 5) - 1) && (nodes.length - m) > 2) {
 				fh.delete(nodes[nodes.length - m]);
 				m++;
 			}
+			long endTime = System.currentTimeMillis();
 			sizeOfHeap += fh.size();
 			linksNum += fh.totalLinks();
 			cutsNum += fh.totalCuts();
 			treesNum += fh.numTrees();
-			long endTime = System.currentTimeMillis();
 			timeSum += endTime - startTime;
 		}
 		System.out.println("Third experiment with n=" + n);
