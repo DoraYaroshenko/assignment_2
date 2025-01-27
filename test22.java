@@ -75,7 +75,7 @@ public class test22 {
             if (heap.totalCuts() - iterationCuts > 1) noCascading = false;
         }
         // Check cuts, links, and cascading cut behavior
-//        if (heap.totalCuts() - totalCuts != treeSize - 1) throw new AssertionError("Cuts count mismatch");
+        if (heap.totalCuts() - totalCuts != treeSize - 1) throw new AssertionError("Cuts count mismatch");
         if (heap.totalLinks() - links != 0) throw new AssertionError("No links should have occurred");
         if (!noCascading) throw new AssertionError("Cascading cuts detected");
 

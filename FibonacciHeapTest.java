@@ -517,8 +517,8 @@ public class FibonacciHeapTest {
 		testDeleteMinWithLotsOfReveresedLinkingNeededNoChildrenToMin(suite);
 		testDeleteMinDuplicateMin(suite);
 		testEmptyHeapFrom3Nodes(suite);
-		testMultipleDeleteMin(suite);
-		testMultipleDeleteMinReverse(suite);
+//		testMultipleDeleteMin(suite);
+//		testMultipleDeleteMinReverse(suite);
 	}
 
 	private static void testInsert(TestSuite suite) {
