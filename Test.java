@@ -49,7 +49,7 @@ public class Test {
             test19(); // test19
             test20(); // test20
             test21(); // test21
-            //test22(); // test22
+            test22(); // test22
             test23(); // test23
             test24(); // test24
             test25(); // test25
